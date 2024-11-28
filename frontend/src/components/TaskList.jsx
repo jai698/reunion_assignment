@@ -59,18 +59,15 @@ const TaskList = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(newTask)
+        body: JSON.stringify({
+          ...newTask,
+          priority: Number(newTask.priority)
+        })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message);
       toast.success('Task created successfully');
-      setNewTask({
-        title: '',
-        startTime: '',
-        endTime: '',
-        priority: 'low',
-        status: 'pending'
-      });
+      resetTask();
       fetchTasks();
     } catch (error) {
       toast.error(error.message);
@@ -80,13 +77,16 @@ const TaskList = () => {
   const handleUpdateTask = async (taskId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL}task/updateTask`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/task/updateTask/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(newTask)
+        body: JSON.stringify({
+          ...newTask,
+          priority: Number(newTask.priority)
+        })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message);
@@ -122,9 +122,9 @@ const TaskList = () => {
   const resetTask = () => {
     setNewTask({
       title: '',
-      startTime: '',
-      endTime: '',
-      priority: 'low',
+      startTime: new Date().toISOString().slice(0, 16),
+      endTime: new Date(Date.now() + 3600000).toISOString().slice(0, 16),
+      priority: 1,
       taskStatus: 'pending'
     });
   };
@@ -170,11 +170,11 @@ const TaskList = () => {
                 onChange={(e) => setNewTask({ ...newTask, priority: Number(e.target.value) })}
                 className="px-4 py-2 bg-black/30 text-white border border-white/20 rounded-lg focus:outline-none focus:border-white/40"
               >
-                <option value={1}>Very Low Priority</option>
-                <option value={2}>Low Priority</option>
-                <option value={3}>Medium Priority</option>
-                <option value={4}>High Priority</option>
-                <option value={5}>Very High Priority</option>
+                <option value={1}>Priority 1 (Very Low)</option>
+                <option value={2}>Priority 2 (Low)</option>
+                <option value={3}>Priority 3 (Medium)</option>
+                <option value={4}>Priority 4 (High)</option>
+                <option value={5}>Priority 5 (Very High)</option>
               </select>
               <select
                 value={newTask.taskStatus}
@@ -276,15 +276,15 @@ const TaskList = () => {
         <div className="mb-6 flex flex-wrap gap-4">
           <select
             value={filters.priority}
-            onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
+            onChange={(e) => setFilters({ ...filters, priority: Number(e.target.value) })}
             className="px-4 py-2 bg-black/30 text-white border border-white/20 rounded-lg focus:outline-none focus:border-white/40"
           >
             <option value="">All Priorities</option>
-            <option value="1">Priority 1 (Very Low)</option>
-            <option value="2">Priority 2 (Low)</option>
-            <option value="3">Priority 3 (Medium)</option>
-            <option value="4">Priority 4 (High)</option>
-            <option value="5">Priority 5 (Very High)</option>
+            <option value={1}>Priority 1 (Very Low)</option>
+            <option value={2}>Priority 2 (Low)</option>
+            <option value={3}>Priority 3 (Medium)</option>
+            <option value={4}>Priority 4 (High)</option>
+            <option value={5}>Priority 5 (Very High)</option>
           </select>
           <select
             value={filters.status}
@@ -339,12 +339,14 @@ const TaskList = () => {
             />
             <select
               value={newTask.priority}
-              onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
+              onChange={(e) => setNewTask({ ...newTask, priority: Number(e.target.value) })}
               className="px-4 py-2 bg-black/30 text-white border border-white/20 rounded-lg focus:outline-none focus:border-white/40"
             >
-              <option value="low">Low Priority</option>
-              <option value="medium">Medium Priority</option>
-              <option value="high">High Priority</option>
+              <option value={1}>Priority 1 (Very Low)</option>
+              <option value={2}>Priority 2 (Low)</option>
+              <option value={3}>Priority 3 (Medium)</option>
+              <option value={4}>Priority 4 (High)</option>
+              <option value={5}>Priority 5 (Very High)</option>
             </select>
             <select
               value={newTask.status}
