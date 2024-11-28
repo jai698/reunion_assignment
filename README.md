@@ -48,7 +48,7 @@ This is a Task Management Application built using the MERN stack (MongoDB, Expre
    cd frontend
    npm start
    ```
-3. Open your browser and navigate to `http://localhost:3000` to access the application.
+3. Open your browser and navigate to `http://localhost:3001` to access the application.
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
